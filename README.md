@@ -59,8 +59,14 @@ $ npm run test:cov
 ```
 
 ## prisma installation
+# install
 $ npm install prisma --save-dev
+
+# init prisma
 $ npx prisma init
+
+# prisma client
+$ npm i @prisma/client
  
 
 ## Support
