@@ -59,15 +59,44 @@ $ npm run test:cov
 ```
 
 ## prisma installation
+
 # install
+
 $ npm install prisma --save-dev
 
 # init prisma
+
 $ npx prisma init
 
 # prisma client
+
 $ npm i @prisma/client
- 
+
+# prisma migration
+
+$ npx prisma migrate dev --name init
+
+## Validator
+
+# class Validator
+
+$ npm i --save class-validator class-validator
+
+# validator transformer
+
+$ npm i --save class-validator class-transformer
+
+# Bcrypt
+
+$ npm i bcrypt
+
+# bcrypt types
+
+$ npm i -D @types/bcrypt
+
+# launch prisam studio GUI
+
+$ npx prisma studio
 
 ## Support
 

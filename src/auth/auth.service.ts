@@ -1,10 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { PrismaService } from 'prisma/prisma.service';
+import { CreateAuthDto } from './dto/create-auth.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  async signup() {
-    return 'signup';
+  constructor(private readonly prisam: PrismaService) {}
+
+  async signup(dto: CreateAuthDto) {
+    const { email, password } = dto;
+
+    const userExist = await this.prisam.user.findUnique({ where: { email } });
+
+    if (userExist) {
+      throw new BadRequestException('Email already exists');
+    }
+    const hashedPassword = await this.hashPassword(password);
+    const user = await this.prisam.user.create({
+      data: { email, password: hashedPassword },
+    });
+
+    return { message: 'User registered', data: user };
+
+    // return 'signup' + dto;
   }
 
   async signin() {
@@ -13,6 +32,12 @@ export class AuthService {
 
   async signout() {
     return 'signout';
+  }
+
+  async hashPassword(password: string) {
+    const saltOrRounds = 10;
+    const hash = await bcrypt.hash(password, saltOrRounds);
+    return hash;
   }
 
   findAll() {
