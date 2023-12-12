@@ -101,6 +101,11 @@ $ npx prisma studio
 # jwt
 $ npm i @nestjs/jwt
 
+# cookie
+$ npm i cookie-parser
+
+# cookie dev dependencies
+$ npm i -D @types/cookie-parser
 
 ## Support
 

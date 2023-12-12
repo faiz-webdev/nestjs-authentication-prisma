@@ -1,10 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { PrismaService } from 'prisma/prisma.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { jwtSecret } from 'src/utils/constants';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -31,17 +36,10 @@ export class AuthService {
     // return 'signup' + dto;
   }
 
-  async signin(dto: CreateAuthDto) {
+  async signin(dto: CreateAuthDto, req: Request, res: Response) {
     const { email, password } = dto;
 
     const userExist = await this.prisam.user.findUnique({ where: { email } });
-
-    // if (userExist) {
-    //   const isMatch = await this.comparePassword(password, userExist.password);
-    //   if (!isMatch) throw new BadRequestException('Invalid credentials');
-    // } else {
-    //   throw new BadRequestException('Invalid credentials');
-    // }
 
     if (!userExist) {
       throw new BadRequestException('Invalid credentials');
@@ -56,7 +54,11 @@ export class AuthService {
       email: userExist.email,
     });
 
-    return { message: 'Login successfull', data: { token } };
+    if (!token) throw new ForbiddenException();
+
+    res.cookie('nestjs-prisma', token);
+    return res.send({ message: 'Logged in successfull' });
+    // return { message: 'Login successfull', data: { token } };
   }
 
   async signout() {
