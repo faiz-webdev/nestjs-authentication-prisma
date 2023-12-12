@@ -26,8 +26,17 @@ export class AuthService {
     // return 'signup' + dto;
   }
 
-  async signin() {
-    return 'signin';
+  async signin(dto: CreateAuthDto) {
+    const { email, password } = dto;
+
+    const userExist = await this.prisam.user.findUnique({ where: { email } });
+
+    if (userExist) {
+      const isMatch = await this.comparePassword(password, userExist.password);
+      if (!isMatch) throw new BadRequestException('Invalid credentials');
+    } else {
+      throw new BadRequestException('Invalid credentials');
+    }
   }
 
   async signout() {
@@ -36,8 +45,11 @@ export class AuthService {
 
   async hashPassword(password: string) {
     const saltOrRounds = 10;
-    const hash = await bcrypt.hash(password, saltOrRounds);
-    return hash;
+    return await bcrypt.hash(password, saltOrRounds);
+  }
+
+  async comparePassword(password: string, hashed: string) {
+    return await bcrypt.compare(password, hashed);
   }
 
   findAll() {
