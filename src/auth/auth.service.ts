@@ -32,6 +32,7 @@ export class AuthService {
       data: { email, password: hashedPassword },
     });
 
+    delete user.password;
     return { message: 'User registered', data: user };
 
     // return 'signup' + dto;
