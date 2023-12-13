@@ -9,7 +9,7 @@ import { jwtSecret } from 'src/utils/constants';
   imports: [
     JwtModule.register({
       secret: jwtSecret,
-      signOptions: { expiresIn: '60m' },
+      signOptions: { expiresIn: '1d' },
     }),
     PassportModule,
   ],
