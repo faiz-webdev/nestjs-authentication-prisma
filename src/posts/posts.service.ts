@@ -40,7 +40,7 @@ export class PostsService {
     });
   }
 
-  async findAll(req: Request) {
+  async findAll(req: Request): Promise<IResponseHandlerParams> {
     try {
       const posts = await this.prisma.post.findMany({
         where: {
@@ -64,7 +64,7 @@ export class PostsService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<IResponseHandlerParams> {
     try {
       const post = await this.prisma.post.findUnique({
         where: {
@@ -88,12 +88,45 @@ export class PostsService {
     }
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto, req: Request) {
+  async update(
+    id: string,
+    updatePostDto: UpdatePostDto,
+    req: Request,
+  ): Promise<IResponseHandlerParams> {
     try {
-      const update = await this.prisma.post.update({
-        where: { id, userId: req.user['id'] },
-        data: updatePostDto,
-      });
+      let update;
+      if (updatePostDto.title) {
+        const checkPost = await this.prisma.post.findFirst({
+          where: {
+            userId: req.user['id'],
+            title: { contains: updatePostDto.title, mode: 'insensitive' },
+          },
+        });
+        if (checkPost) {
+          if (checkPost.id === id) {
+            update = await this.prisma.post.update({
+              where: { id, userId: req.user['id'] },
+              data: updatePostDto,
+            });
+          } else {
+            return ResponseHandlerService({
+              success: false,
+              message: 'Duplicate post occured',
+              httpCode: HttpStatus.OK,
+            });
+          }
+        } else {
+          update = await this.prisma.post.update({
+            where: { id, userId: req.user['id'] },
+            data: updatePostDto,
+          });
+        }
+      } else {
+        update = await this.prisma.post.update({
+          where: { id, userId: req.user['id'] },
+          data: updatePostDto,
+        });
+      }
 
       return ResponseHandlerService({
         success: true,
@@ -111,7 +144,23 @@ export class PostsService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string): Promise<IResponseHandlerParams> {
+    try {
+      const deletePost = await this.prisma.post.delete({ where: { id } });
+
+      return ResponseHandlerService({
+        success: true,
+        message: 'Post updated',
+        httpCode: HttpStatus.OK,
+        data: deletePost,
+      });
+    } catch (error) {
+      return ResponseHandlerService({
+        success: false,
+        httpCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Unable to process your data. Please try again later`,
+        errorDetails: error.toString(),
+      });
+    }
   }
 }

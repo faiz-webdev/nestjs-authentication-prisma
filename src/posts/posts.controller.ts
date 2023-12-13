@@ -30,12 +30,12 @@ export class PostsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@Req() req) {
+  findAll(@Req() req): Promise<IResponseHandlerParams> {
     return this.postsService.findAll(req);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<IResponseHandlerParams> {
     return this.postsService.findOne(id);
   }
 
@@ -45,12 +45,12 @@ export class PostsController {
     @Param('id') id: string,
     @Body() updatePostDto: UpdatePostDto,
     @Req() req,
-  ) {
+  ): Promise<IResponseHandlerParams> {
     return this.postsService.update(id, updatePostDto, req);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(+id);
+  remove(@Param('id') id: string): Promise<IResponseHandlerParams> {
+    return this.postsService.remove(id);
   }
 }
