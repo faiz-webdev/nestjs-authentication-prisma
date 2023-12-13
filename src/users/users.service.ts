@@ -15,7 +15,7 @@ export class UsersService {
       where: { id: id },
       select: { id: true, email: true, createdAt: true, updatedAt: true },
     });
-    console.log(req.user)
+
     if (!user) throw new NotFoundException();
 
     const decodedUser = req.user as { id: string; email: string };

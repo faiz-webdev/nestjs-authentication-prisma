@@ -86,9 +86,10 @@ export class AuthService {
 
   async signToken(args: { id: string; email: string }) {
     const payload = args;
-    const token = await this.jwt.signAsync(payload, {
-      secret: jwtSecret,
-    });
+    // const token = await this.jwt.signAsync(payload, {
+    //   secret: jwtSecret,
+    // });
+    const token = await this.jwt.signAsync(payload);
     return token;
   }
 
