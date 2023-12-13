@@ -107,6 +107,10 @@ $ npm i cookie-parser
 # cookie dev dependencies
 $ npm i -D @types/cookie-parser
 
+# passport dependencies
+ - $ npm install --save @nestjs/passport passport @nestjs/jwt passport-jwt
+ - $ npm install --save-dev @types/passport-jwt
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
