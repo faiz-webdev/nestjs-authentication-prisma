@@ -1,10 +1,29 @@
-import { Controller, Get, Param, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { Request } from 'express';
+import { IResponseHandlerParams } from 'src/utils/interfaces/response.handler.interface';
+import { CreateUserProfileDto } from './dto/create-user-profile.dto';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UsersService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get('get-user-detail')
+  getUserDetails(@Req() req: Request): Promise<IResponseHandlerParams> {
+    return this.userService.getUserDetails(req);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
@@ -15,5 +34,19 @@ export class UserController {
   @Get('')
   getUsers() {
     return this.userService.getUsers();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('update-user-profile/:userId')
+  async updateUserProfile(
+    @Param() userId: string,
+    @Body() createUserProfileDto: CreateUserProfileDto,
+    @Req() req: Request,
+  ): Promise<IResponseHandlerParams> {
+    return this.userService.updateUserProfile(
+      userId,
+      createUserProfileDto,
+      req,
+    );
   }
 }
