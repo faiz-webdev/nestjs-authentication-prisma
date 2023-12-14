@@ -79,6 +79,9 @@ $ npx prisma migrate dev --name init
 # Rate limiting
 $ npm i --save @nestjs/throttler
 
+# Swagger integration
+$ npm install --save @nestjs/swagger
+
 ## Validator
 
 # class Validator

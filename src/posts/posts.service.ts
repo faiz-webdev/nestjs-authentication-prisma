@@ -46,6 +46,7 @@ export class PostsService {
         where: {
           userId: req.user['id'],
         },
+        orderBy: { createdAt: 'desc' },
       });
 
       return ResponseHandlerService({

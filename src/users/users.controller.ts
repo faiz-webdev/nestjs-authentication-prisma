@@ -14,7 +14,9 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { Request } from 'express';
 import { IResponseHandlerParams } from 'src/utils/interfaces/response.handler.interface';
 import { CreateUserProfileDto } from './dto/create-user-profile.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UsersService) {}

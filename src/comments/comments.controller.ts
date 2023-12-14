@@ -15,7 +15,9 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { IResponseHandlerParams } from 'src/utils/interfaces/response.handler.interface';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Comment')
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
@@ -64,6 +66,7 @@ export class CommentsController {
   }
 }
 
+@ApiTags('Comment')
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentsService: CommentsService) {}
