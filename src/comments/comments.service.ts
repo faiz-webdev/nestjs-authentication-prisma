@@ -39,19 +39,117 @@ export class CommentsService {
     }
   }
 
-  findAll() {
-    return `This action returns all comments`;
+  async findAll(req: Request) {
+    try {
+      const comment = await this.prisma.comment.findMany({
+        where: {
+          userId: req.user['id'],
+        },
+      });
+
+      return ResponseHandlerService({
+        success: true,
+        message: 'Comment data',
+        httpCode: HttpStatus.OK,
+        data: comment,
+      });
+    } catch (error) {
+      return ResponseHandlerService({
+        success: false,
+        httpCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Unable to process your data. Please try again later`,
+        errorDetails: error.toString(),
+      });
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  async findOne(id: string, req: Request): Promise<IResponseHandlerParams> {
+    try {
+      const comment = await this.prisma.comment.findFirst({
+        where: {
+          userId: req.user['id'],
+          id: id,
+        },
+      });
+
+      return ResponseHandlerService({
+        success: true,
+        message: 'Comment data',
+        httpCode: HttpStatus.OK,
+        data: comment,
+      });
+    } catch (error) {
+      return ResponseHandlerService({
+        success: false,
+        httpCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Unable to process your data. Please try again later`,
+        errorDetails: error.toString(),
+      });
+    }
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async update(
+    id: string,
+    updateCommentDto: UpdateCommentDto,
+    req: Request,
+  ): Promise<IResponseHandlerParams> {
+    try {
+      let update;
+      const checkComment = await this.prisma.comment.findFirst({
+        where: {
+          userId: req.user['id'],
+          id,
+        },
+      });
+      if (checkComment) {
+        update = await this.prisma.comment.update({
+          where: { id, userId: req.user['id'] },
+          data: updateCommentDto,
+        });
+      } else {
+        return ResponseHandlerService({
+          success: false,
+          message: 'No comment found (s)',
+          httpCode: HttpStatus.OK,
+          data: update,
+        });
+      }
+
+      return ResponseHandlerService({
+        success: true,
+        message: 'Comment updated',
+        httpCode: HttpStatus.OK,
+        data: update,
+      });
+    } catch (error) {
+      return ResponseHandlerService({
+        success: false,
+        httpCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Unable to process your data. Please try again later`,
+        errorDetails: error.toString(),
+      });
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async remove(id: string, req: Request): Promise<IResponseHandlerParams> {
+    try {
+      const deletePost = await this.prisma.comment.delete({
+        where: { id, userId: req.user['id'] },
+      });
+
+      return ResponseHandlerService({
+        success: true,
+        message: 'Post updated',
+        httpCode: HttpStatus.OK,
+        data: deletePost,
+      });
+    } catch (error) {
+      return ResponseHandlerService({
+        success: false,
+        httpCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Unable to process your data. Please try again later`,
+        errorDetails: error.toString(),
+      });
+    }
   }
 }

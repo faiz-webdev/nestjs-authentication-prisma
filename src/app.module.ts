@@ -4,8 +4,15 @@ import { PrismaModule } from 'prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
-
+import { ThrottlerModule } from '@nestjs/throttler';
 @Module({
-  imports: [AuthModule, PrismaModule, UsersModule, PostsModule, CommentsModule],
+  imports: [
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }]),
+    AuthModule,
+    PrismaModule,
+    UsersModule,
+    PostsModule,
+    CommentsModule,
+  ],
 })
 export class AppModule {}

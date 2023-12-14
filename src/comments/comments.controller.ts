@@ -29,23 +29,37 @@ export class CommentsController {
     return await this.commentsService.create(createCommentDto, req);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.commentsService.findAll();
+  findAll(@Req() req: Request) {
+    return this.commentsService.findAll(req);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentsService.findOne(+id);
+  findOne(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<IResponseHandlerParams> {
+    return this.commentsService.findOne(id, req);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(+id, updateCommentDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+    @Req() req: Request,
+  ): Promise<IResponseHandlerParams> {
+    return this.commentsService.update(id, updateCommentDto, req);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentsService.remove(+id);
+  remove(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<IResponseHandlerParams> {
+    return this.commentsService.remove(id, req);
   }
 }
