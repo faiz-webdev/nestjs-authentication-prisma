@@ -152,4 +152,29 @@ export class CommentsService {
       });
     }
   }
+
+  async userCommentWithPost(req: Request): Promise<IResponseHandlerParams> {
+    try {
+      const comment = await this.prisma.comment.findMany({
+        where: { userId: req.user['id'] },
+        include: {
+          post: true,
+        },
+      });
+
+      return ResponseHandlerService({
+        success: true,
+        message: 'Post updated',
+        httpCode: HttpStatus.OK,
+        data: comment,
+      });
+    } catch (error) {
+      return ResponseHandlerService({
+        success: false,
+        httpCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Unable to process your data. Please try again later`,
+        errorDetails: error.toString(),
+      });
+    }
+  }
 }

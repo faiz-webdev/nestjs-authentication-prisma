@@ -63,3 +63,14 @@ export class CommentsController {
     return this.commentsService.remove(id, req);
   }
 }
+
+@Controller('comment')
+export class CommentController {
+  constructor(private readonly commentsService: CommentsService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get('user-comment-with-post')
+  userCommentWithPost(@Req() req: Request): Promise<IResponseHandlerParams> {
+    return this.commentsService.userCommentWithPost(req);
+  }
+}

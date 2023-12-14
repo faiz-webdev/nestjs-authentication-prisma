@@ -150,9 +150,42 @@ export class PostsService {
 
       return ResponseHandlerService({
         success: true,
-        message: 'Post updated',
+        message: 'Post deleted',
         httpCode: HttpStatus.OK,
         data: deletePost,
+      });
+    } catch (error) {
+      return ResponseHandlerService({
+        success: false,
+        httpCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Unable to process your data. Please try again later`,
+        errorDetails: error.toString(),
+      });
+    }
+  }
+
+  async userPostWithComment(req: Request): Promise<IResponseHandlerParams> {
+    try {
+      const posts = await this.prisma.post.findMany({
+        where: { userId: req.user['id'] },
+        include: {
+          Comments: {
+            select: {
+              id: true,
+              title: true,
+              content: true,
+              postId: true,
+              userId: true,
+            },
+          },
+        },
+      });
+
+      return ResponseHandlerService({
+        success: true,
+        message: 'Post updated',
+        httpCode: HttpStatus.OK,
+        data: posts,
       });
     } catch (error) {
       return ResponseHandlerService({

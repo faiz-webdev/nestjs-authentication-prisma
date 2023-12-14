@@ -35,6 +35,12 @@ export class PostsController {
     return this.postsService.findAll(req);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('user-post-with-comments')
+  userPostWithComment(@Req() req: Request): Promise<IResponseHandlerParams> {
+    return this.postsService.userPostWithComment(req);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<IResponseHandlerParams> {
     return this.postsService.findOne(id);
@@ -50,6 +56,7 @@ export class PostsController {
     return this.postsService.update(id, updatePostDto, req);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string): Promise<IResponseHandlerParams> {
     return this.postsService.remove(id);
