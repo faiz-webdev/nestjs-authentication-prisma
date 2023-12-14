@@ -14,6 +14,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { IResponseHandlerParams } from 'src/utils/interfaces/response.handler.interface';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { Request } from 'express';
 
 @Controller('posts')
 export class PostsController {
@@ -23,7 +24,7 @@ export class PostsController {
   @Post()
   async create(
     @Body() createPostDto: CreatePostDto,
-    @Req() req,
+    @Req() req: Request,
   ): Promise<IResponseHandlerParams> {
     return this.postsService.create(createPostDto, req);
   }

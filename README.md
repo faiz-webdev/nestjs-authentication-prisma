@@ -76,6 +76,9 @@ $ npm i @prisma/client
 
 $ npx prisma migrate dev --name init
 
+# Rate limiting
+$ npm i --save @nestjs/throttler
+
 ## Validator
 
 # class Validator

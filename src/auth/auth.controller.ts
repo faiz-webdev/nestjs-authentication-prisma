@@ -46,4 +46,9 @@ export class AuthController {
   remove(@Param('id') id: string) {
     return this.authService.remove(+id);
   }
+
+  @Get('/get-user-by-email/:email')
+  getUserByEmail(@Param('email') email: string) {
+    return this.authService.getUserByEmail(email);
+  }
 }

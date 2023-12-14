@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { jwtSecret } from 'src/utils/constants';
 import { Request, Response } from 'express';
 import { IUser } from 'src/utils/interfaces/user.interface';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -93,17 +94,19 @@ export class AuthService {
     return token;
   }
 
-  async getUserByEmail(email: string): Promise<IUser> {
-    const user: any = await this.prisam.user.findUnique({
+  async getUserByEmail(email: string): Promise<User> {
+    const user: User = await this.prisam.user.findUnique({
       where: { email },
       select: {
         id: true,
         email: true,
-        password: false,
+        password: true,
         createdAt: true,
         updatedAt: true,
+        isActive: true,
       },
     });
+    delete user['password'];
     return user;
   }
 
