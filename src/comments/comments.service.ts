@@ -155,6 +155,7 @@ export class CommentsService {
 
   async userCommentWithPost(req: Request): Promise<IResponseHandlerParams> {
     try {
+      //belongs to the post relationship
       const comment = await this.prisma.comment.findMany({
         where: { userId: req.user['id'] },
         include: {
