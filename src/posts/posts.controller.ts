@@ -15,7 +15,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { IResponseHandlerParams } from 'src/utils/interfaces/response.handler.interface';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { Request } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Post')
 @Controller('posts')
@@ -23,6 +23,7 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post()
   async create(
     @Body() createPostDto: CreatePostDto,
